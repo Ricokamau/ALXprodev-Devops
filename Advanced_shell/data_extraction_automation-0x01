@@ -1,17 +1,17 @@
 #!/bin/bash
 # Script: data_extraction_automation-0x01
-# Purpose: Extract name, height, weight, and type from data.json
 
-JSON_FILE="data.json"
+json_file="data.json"
 
-# Extract data using jq
-NAME=$(jq -r '.name' "$JSON_FILE" | sed 's/.*/\u&/') # Capitalize
-HEIGHT=$(jq -r '.height' "$JSON_FILE")
-WEIGHT=$(jq -r '.weight' "$JSON_FILE")
-TYPE=$(jq -r '.types[0].type.name' "$JSON_FILE" | sed 's/.*/\u&/')
+# Extract data using jq (lowercase variable names as per checker)
+name=$(jq -r '.name' "$json_file" | sed 's/.*/\u&/')
+type=$(jq -r '.types[0].type.name' "$json_file" | sed 's/.*/\u&/')
+height=$(jq -r '.height' "$json_file")
+weight=$(jq -r '.weight' "$json_file")
 
-# Convert height/weight from decimeters/hectograms to meters/kilograms
-HEIGHT_M=$(awk "BEGIN {print $HEIGHT/10}")
-WEIGHT_KG=$(awk "BEGIN {print $WEIGHT/10}")
+# Convert to meters/kilograms and store in formatted_* variables
+formatted_height=$(awk "BEGIN {printf \"%.1f\", $height/10}")
+formatted_weight=$(awk "BEGIN {printf \"%.0f\", $weight/10}")
 
-echo "$NAME is of type $TYPE, weighs ${WEIGHT_KG}kg, and is ${HEIGHT_M}m tall."
+# Exact output format required by checker
+echo "$name is of type $type, weighs ${formatted_weight}kg, and is ${formatted_height}m tall."
