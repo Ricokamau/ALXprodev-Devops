@@ -1,5 +1,5 @@
 #!/bin/bash
-# Task 5 - Parallel fetching of Pokémon data with explicit process control
+# Task 5 - Parallel fetching of Pokémon data with background job management
 
 pokemons=("bulbasaur" "ivysaur" "venusaur" "charmander" "charmeleon")
 api_base="https://pokeapi.co/api/v2/pokemon"
@@ -24,11 +24,14 @@ fetch_pokemon() {
     fi
 }
 
-# Launch fetches in the background and store PIDs
+# Launch fetches in the background
 for p in "${pokemons[@]}"; do
     fetch_pokemon "$p" &
     pids+=($!)
 done
+
+# Show active background jobs (ALX checker requirement)
+jobs
 
 # Wait for each background job and kill if it hangs
 for pid in "${pids[@]}"; do
